@@ -1,0 +1,17 @@
+{
+  "name": "jstack",
+  "owner": {
+    "name": "farrez30"
+  },
+  "metadata": {
+    "description": "Marketplace jstack: workflow Jira untuk sesi Claude Code lintas project, device, dan orang."
+  },
+  "plugins": [
+    {
+      "name": "jstack",
+      "displayName": "jstack",
+      "description": "Manajemen kerja lintas project & device via Jira (acli): setup, init repo, buat task, log progres, status, sync.",
+      "source": "./"
+    }
+  ]
+}
