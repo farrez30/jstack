@@ -1,7 +1,7 @@
 {
   "name": "jstack",
   "displayName": "jstack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Manajemen kerja lintas project & device via Jira (acli): setup, init repo, buat task, log progres, status, sync.",
   "author": {
     "name": "farrez30"
