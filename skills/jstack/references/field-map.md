@@ -9,8 +9,8 @@
 | Assignee | tidak | `--assignee` | Email, account ID, `@me`, atau `default` |
 | Label repo | ya (konvensi) | `--label` | **Konvensi jstack: setiap item diberi label nama repo** (mis. `tgr-website`, `viralytics-v2`) — inilah pengganti Components, karena `create` tidak punya flag component dan project team-managed belum tentu punya Components. Lowercase, tanpa spasi |
 | Label lain | tidak | `--label` (koma) | `bug`, `infra`, dsb. — secukupnya |
-| Due date | tidak | `--from-json` → `additionalAttributes` | Tidak ada flag khusus. Bentuk standar Jira: `"duedate": "2026-08-30"` di `additionalAttributes`. **Uji sekali di item sandbox sebelum diandalkan**; kalau ditolak, set lewat UI/`edit` dan catat hasilnya di file ini |
-| Priority | tidak | `--from-json` → `additionalAttributes` | Sama seperti due date: `"priority": {"name": "High"}` — uji dulu. Board Free sering cukup tanpa priority |
+| Due date | tidak | `create --from-json` → `additionalAttributes` | **TERUJI JALAN** (COD-2, acli 1.3.23): `"additionalAttributes": {"duedate": "2026-08-26"}` saat create. **`edit` TIDAK BISA** — `--from-json` edit menolak `additionalAttributes` (`json: unknown field`). Jadi: set saat create; menambah due date belakangan = lewat UI Jira |
+| Priority | tidak | `create --from-json` → `additionalAttributes` | Polanya kemungkinan sama dengan due date (`"priority": {"name": "High"}`) tapi **belum diuji** — kalau dipakai, verifikasi hasilnya dengan `view` dan catat di sini. Board kecil biasanya cukup tanpa priority |
 | Parent/Epic | tidak | `--parent` | ID parent, untuk sub-task/epic-child |
 | Link antar item | tidak | `workitem link create` | Jalankan `link type` dulu untuk jenis relasi yang tersedia |
 

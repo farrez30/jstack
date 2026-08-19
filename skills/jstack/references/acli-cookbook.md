@@ -59,11 +59,16 @@ acli jira auth status    # cek siapa yang login
 ## Search (JQL) — read, bebas jalan
 
 ```bash
-acli jira workitem search --jql "assignee = currentUser() AND statusCategory != Done ORDER BY duedate ASC, updated DESC" --fields "key,summary,status,duedate,assignee" --limit 30 --json
+acli jira workitem search --jql "assignee = currentUser() AND statusCategory != Done ORDER BY duedate ASC, updated DESC" --limit 30 --json
+acli jira workitem search --jql "project = COD AND statusCategory != Done" --fields "key,summary,status,assignee" --limit 30
 acli jira workitem search --jql "project = COD AND statusCategory != Done" --count
 ```
 
 Flag: `--jql` `--fields` (default `issuetype,key,assignee,priority,status,summary`) `--limit` `--paginate` `--json` `--csv` `--count`.
+
+Dua jebakan teruji di lapangan:
+- `--fields` punya whitelist — `duedate` DITOLAK (`field 'duedate' is not allowed`). Butuh due date → pakai `--json` (memuat semua field, termasuk `fields.duedate`) dan format sendiri.
+- Pipe output `--json` ke parser (python/jq) jangan lewat PowerShell 5.1 — pipeline-nya menambah BOM UTF-8 yang membuat `json.load` gagal. Jalankan lewat Git Bash, atau di python pakai `utf-8-sig`.
 
 ## View — read, bebas jalan
 
