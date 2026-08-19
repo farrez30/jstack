@@ -32,14 +32,23 @@ Verifikasi: `acli --version`. Atlassian hanya mendukung tiap versi ±6 bulan —
 
 ## Auth — DIJALANKAN USER SENDIRI
 
-Token tidak boleh melewati Claude. Berikan blok ini ke user untuk dijalankan di terminalnya sendiri (token dibuat di https://id.atlassian.com/manage-profile/security/api-tokens):
+Kredensial tidak boleh melewati Claude. Jalur utama — OAuth via browser, tanpa token:
 
-```powershell
-# Windows — token ditempel saat prompt stdin:
-acli jira auth login --site "farrez.atlassian.net" --email "email-user" --token
+```
+acli jira auth login --web
 ```
 
-Alternatif tanpa token (OAuth via browser): `acli jira auth login --web`.
+Fallback API token (dibuat di https://id.atlassian.com/manage-profile/security/api-tokens) — perhatikan: `--token` membaca stdin **tanpa prompt**; dijalankan polos di terminal interaktif akan gagal `failed to read token from standard input` (kejadian nyata saat rollout). Bentuk yang benar:
+
+```powershell
+# Windows / PowerShell — Read-Host memberi prompt dan meneruskan ke stdin (tidak masuk history):
+Read-Host "Paste token" | acli jira auth login --site "farrez.atlassian.net" --email "email-user" --token
+```
+
+```bash
+# macOS/Linux:
+acli jira auth login --site "farrez.atlassian.net" --email "email-user" --token < token.txt
+```
 
 Yang boleh dijalankan Claude:
 

@@ -36,13 +36,16 @@ Argumen pertama menentukan subcommand. Tanpa argumen: tampilkan ringkasan subcom
 ## /jstack setup — first-run per device
 
 1. **Cek acli**: `acli --version`. Kalau belum ada, instal sesuai OS (perintah persis di cookbook §Instalasi), lalu verifikasi ulang — di Windows, sesi yang sama belum membaca PATH baru, jadi pakai path penuh `& "$env:LOCALAPPDATA\Programs\acli\acli.exe" --version` (detail di cookbook).
-2. **Cek auth**: `acli jira auth status`. Kalau belum login:
-   - Tunjukkan ke user langkah membuat API token: buka https://id.atlassian.com/manage-profile/security/api-tokens → Create API token.
-   - Berikan perintah login untuk **dijalankan user sendiri di terminal** (jangan kamu jalankan, karena token tidak boleh lewat kamu):
+2. **Cek auth**: `acli jira auth status`. Kalau belum login, minta user menjalankan **sendiri di terminalnya** (jangan kamu jalankan):
+   - **Jalur utama — OAuth browser, tanpa token:**
      ```
-     acli jira auth login --site "<site>" --email "<email>" --token
+     acli jira auth login --web
      ```
-     (token dibaca dari stdin — user menempelkannya langsung di terminalnya)
+   - **Fallback — API token** (buat di https://id.atlassian.com/manage-profile/security/api-tokens). Awas: `--token` membaca stdin tanpa prompt, jadi dijalankan polos di PowerShell interaktif pasti gagal `failed to read token from standard input`. Bentuk yang benar:
+     ```powershell
+     Read-Host "Paste token" | acli jira auth login --site "<site>" --email "<email>" --token
+     ```
+     (macOS/Linux: `acli jira auth login --site "<site>" --email "<email>" --token < token.txt`)
    - Tunggu user bilang selesai, lalu verifikasi: `acli jira auth status` + satu read ringan (mis. `acli jira project list` atau search 1 item).
 3. **Tulis config global** `~/.jstack/config.json` (site, email, displayName — tanya kalau belum tahu).
 4. **Tawarkan MCP connector** untuk surface non-CLI: sarankan user mengaktifkan Atlassian connector di claude.ai → Settings → Connectors (sekali per akun claude.ai). Detail di [references/chat-surfaces.md](references/chat-surfaces.md).
