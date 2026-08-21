@@ -12,7 +12,7 @@
 | Due date | tidak | `create --from-json` → `additionalAttributes` | **TERUJI JALAN** (COD-2, acli 1.3.23): `"additionalAttributes": {"duedate": "2026-08-26"}` saat create. **`edit` TIDAK BISA** — `--from-json` edit menolak `additionalAttributes` (`json: unknown field`). Jadi: set saat create; menambah due date belakangan = lewat UI Jira |
 | Priority | tidak | `create --from-json` → `additionalAttributes` | Polanya kemungkinan sama dengan due date (`"priority": {"name": "High"}`) tapi **belum diuji** — kalau dipakai, verifikasi hasilnya dengan `view` dan catat di sini. Board kecil biasanya cukup tanpa priority |
 | Parent/Epic | ya (konvensi) | `--parent` saat create | **Konvensi jstack: satu repo = satu Epic**; item baru ber-parent ke `epicKey` dari `.jira-map.json` supaya Timeline per project terbaca. `--parent` hanya ada di `create` — meng-parent-kan item lama = UI (buka item → Add parent, atau Board → Group by Epic → drag) |
-| Start date | tidak (epic saja) | `create --from-json` → `additionalAttributes` → `customfield_10015` | ID customfield "Start date" di site farrez; **verifikasi saat pertama dipakai** (`view KEY --fields customfield_10015 --json`) — gagal → set via drag ujung kiri bar di Timeline |
+| Start date | tidak (epic saja) | `create --from-json` → `additionalAttributes` → `customfield_10015` | **TERUJI JALAN** (COD-10/11/12, site farrez): `"customfield_10015": "2026-07-09"` saat create. ID customfield bisa beda di site lain — verifikasi dengan `view KEY --fields customfield_10015 --json`. Seperti duedate, `edit` tidak bisa — ubah belakangan via drag bar di Timeline |
 | Link antar item | tidak | `workitem link create` | Jalankan `link type` dulu untuk jenis relasi yang tersedia |
 
 ## Bentuk `--from-json`
