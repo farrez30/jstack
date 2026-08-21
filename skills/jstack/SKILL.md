@@ -23,9 +23,9 @@ Satu skill untuk semua workspace: repo Coderoach menunjuk project bersama, repo 
   ```
 - **Per-repo** — `.jira-map.json` di root repo (di-commit):
   ```json
-  { "site": "farrez.atlassian.net", "projectKey": "COD", "label": "tgr-website" }
+  { "site": "farrez.atlassian.net", "projectKey": "COD", "label": "tgr-website", "epicKey": "COD-10" }
   ```
-  `label` = penanda repo pada tiap work item (konvensi jstack, pengganti Components — lihat field-map). Repo tanpa file ini = belum terhubung Jira → tawarkan `/jstack init`.
+  `label` = penanda repo pada tiap work item (konvensi jstack, pengganti Components — lihat field-map). `epicKey` = Epic milik repo ini (konvensi: **satu repo = satu Epic**, supaya Timeline per project terbaca); item baru dari `/jstack task` otomatis ber-parent ke sana. Repo tanpa file ini = belum terhubung Jira → tawarkan `/jstack init`.
 
 ## Routing
 
@@ -57,20 +57,21 @@ Jalankan dari dalam repo target.
 
 1. Kalau `.jira-map.json` sudah ada: tampilkan isinya, tanya mau diubah atau tidak.
 2. Tanya (pakai pertanyaan terstruktur bila tersedia): project key tujuan (tampilkan pilihan dari `acli jira project list`), dan label repo untuk penanda item (konvensi: nama repo lowercase tanpa spasi, mis. `tgr-website`).
-3. Tulis `.jira-map.json`.
-4. **graphify**: cek `graphify-out/` di root repo. Belum ada → tawarkan menjalankan `/graphify`. Lalu pastikan `.gitignore` punya entri `graphify-out/` — tambahkan bila belum.
-5. **CLAUDE.md repo**: tambahkan blok kecil (idempoten — jangan dobel kalau sudah ada):
+3. **Epic repo**: cari Epic yang sudah ada (`search --jql "project = <KEY> AND type = Epic"`); belum ada yang cocok → tawarkan membuat (konfirmasi dulu): summary = nama project/repo, label repo, start date = tanggal commit pertama (`git log --reverse --format=%ad --date=short | head -1` — fakta git, bukan karangan), due = target user (tanya). Tanyakan juga tujuan project 1 kalimat → jadi deskripsi Epic. Simpan key-nya untuk `epicKey`. Kalau project belum punya type Epic, menambahkannya = **admin site** (⚙️ → Issues → Issue type schemes — acli tidak bisa); user bukan admin → minta admin site (untuk COD: checklist farrez di docs/panduan-jira-coderoach.md).
+4. Tulis `.jira-map.json` (site, projectKey, label, epicKey).
+5. **graphify**: cek `graphify-out/` di root repo. Belum ada → tawarkan menjalankan `/graphify`. Lalu pastikan `.gitignore` punya entri `graphify-out/` — tambahkan bila belum.
+6. **CLAUDE.md repo**: tambahkan blok kecil (idempoten — jangan dobel kalau sudah ada):
    ```markdown
    # jstack
    Repo ini terhubung Jira (lihat .jira-map.json). Di awal sesi: kalau graphify-out/ belum ada, tawarkan /graphify. Di checkpoint (task selesai / habis commit / akhir sesi), tanyakan apakah pekerjaan ini bagian dari work item Jira — kalau ya tawarkan /jstack log. Jangan menulis ke Jira tanpa konfirmasi.
    ```
-6. Tawarkan commit untuk `.jira-map.json` + CLAUDE.md (ikuti konvensi commit repo tsb).
+7. Tawarkan commit untuk `.jira-map.json` + CLAUDE.md (ikuti konvensi commit repo tsb).
 
 ## /jstack task — buat work item baru
 
 1. Baca `.jira-map.json` (tidak ada → tawarkan `init` dulu; atau user boleh menyebut project key eksplisit).
-2. Kumpulkan field: summary (wajib), description, type (Task/Bug/Story — cek type yang tersedia di project), assignee, due date, priority, link terkait. Jangan interogasi satu-satu kalau user sudah memberi sebagian di prompt — tanya hanya yang kosong dan penting (minimal: summary + type).
-3. Tampilkan draft item → konfirmasi → jalankan `create` sesuai cookbook (sertakan label repo).
+2. Kumpulkan field: summary (wajib), description, type (Task/Bug/Story — cek type yang tersedia di project), assignee, **due date (selalu tanyakan** — boleh dijawab "tidak ada", tapi tanpa ditanya Timeline & radar overdue mati), priority, link terkait. Jangan interogasi satu-satu kalau user sudah memberi sebagian di prompt — tanya hanya yang kosong dan penting (minimal: summary + type + due date).
+3. Tampilkan draft item → konfirmasi → jalankan `create` sesuai cookbook (sertakan label repo + `--parent <epicKey>` dari `.jira-map.json`; due date via `--from-json` additionalAttributes). `epicKey` kosong/tidak ada → JANGAN buat item tanpa parent diam-diam: tawarkan dulu melengkapinya (pilih Epic yang ada / buat baru, seperti langkah init №3) — user boleh menolak, barulah buat tanpa parent.
 4. Laporkan key hasil (mis. `COD-7`) + URL `https://<site>/browse/<KEY>`.
 
 ## /jstack log [KEY] — catat progres kerja
@@ -80,7 +81,7 @@ Jalankan dari dalam repo target.
    - Deteksi dari branch / pesan commit terakhir (pola `[A-Z][A-Z0-9]+-\d+`).
    - Kalau tetap tidak jelas → tampilkan item open milik user di project repo ini (`search` per cookbook) dan tanya: bagian dari item mana / item baru (→ alihkan ke `task`) / bukan kerjaan Jira (→ selesai, jangan paksa).
 2. Rangkum pekerjaan sesi ini dalam 2–5 kalimat gaya dev (apa yang berubah, hasil tes, sisa pekerjaan) — bahan dari percakapan + `git log`/`git diff` terakhir. Tanpa jargon AI.
-3. Tanya sekalian: perlu transisi status? Status saat ini dari `view KEY --fields status`; daftar status tujuan tidak disediakan acli — lihat board Jira atau tanya user.
+3. Tanya sekalian: perlu transisi status? Status saat ini dari `view KEY --fields status`; daftar status tujuan tidak disediakan acli — lihat board Jira atau tanya user (alur COD: Backlog → To Do → In Progress → In Review → Done, plus Halt sebagai parkir "ditahan dulu" dari/ke tahap mana pun; item masuk Halt wajib diberi komentar sedang menunggu apa).
 4. Tampilkan draft komentar + rencana transisi → konfirmasi → eksekusi (`comment create` dengan `--body-file`, lalu `transition` bila diminta).
 5. Konfirmasi hasil dengan menyebut key + status akhirnya.
 
@@ -102,5 +103,7 @@ Jalankan dari dalam repo target.
 ---
 
 ## Etiket checkpoint (untuk sesi kerja normal, di luar pemanggilan /jstack)
+
+**Repo/project BARU tanpa `.jira-map.json`** (termasuk project yang baru dibuat di sesi itu): sekali per sesi, di momen natural pertama (setelah scaffold jadi / commit pertama), tawarkan ringan: *"project baru — mau dihubungkan ke Jira sekarang? bagian dari Epic yang sudah ada atau Epic baru, dan target selesainya kapan?"* Jawaban "nanti dulu" final untuk sesi itu. Ini berlaku juga bila user menyebut memulai project dari Claude Chat — arahkan polanya (lihat chat-surfaces.md).
 
 Kalau repo aktif punya `.jira-map.json`, di checkpoint natural — task user selesai, habis membuat commit, atau user berpamitan — tanyakan sekali dengan ringan: *"ini bagian dari work item Jira? mau saya catat via /jstack log?"* Satu kali tanya per checkpoint, jangan cerewet, dan jawaban "tidak" selalu final. Jangan pernah auto-update tanpa ditanya.

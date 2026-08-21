@@ -28,9 +28,9 @@ Lalu buka sesi Claude Code **baru** (sesi yang sudah terlanjur terbuka: jalankan
 /jstack setup
 ```
 
-Setup akan memasang acli bila belum ada, lalu **memandumu login sendiri** — kamu membuat API token di [id.atlassian.com → Security → API tokens](https://id.atlassian.com/manage-profile/security/api-tokens) dan menempelkannya **langsung di terminalmu**, bukan ke chat. Claude tidak pernah melihat tokenmu.
+Setup akan memasang acli bila belum ada, lalu **memandumu login sendiri di terminalmu** — jalur utamanya `acli jira auth login --web` (OAuth lewat browser, tanpa token sama sekali). Kredensialmu tidak pernah lewat chat; Claude hanya memverifikasi hasilnya.
 
-Terakhir, di tiap repo yang mau dihubungkan:
+Repo yang sudah membawa `.jira-map.json` ter-commit (mis. repo Coderoach yang kamu clone) **sudah otomatis terhubung** — tidak perlu apa-apa lagi. `init` hanya untuk repo yang belum:
 
 ```
 /jstack init
@@ -42,10 +42,15 @@ Kerja seperti biasa. Di repo yang ter-mapping, Claude akan menawarkan diri di ch
 
 Dari **Claude Chat / Cowork / HP** (tanpa terminal): aktifkan **Atlassian connector** di claude.ai → Settings → Connectors (sekali per akun), lalu perintah biasa seperti "pindahkan COD-7 ke In Review". Detail: [chat-surfaces.md](skills/jstack/references/chat-surfaces.md).
 
+## Panduan memakai Jira-nya
+
+Cara membaca tab-tab project COD, evaluasi lewat Timeline & Reports, alur status (termasuk Halt), dan konvensi tim: **[docs/panduan-jira-coderoach.md](docs/panduan-jira-coderoach.md)** — baca sekali oleh setiap anggota.
+
 ## Konvensi
 
 - **Label = repo.** Setiap work item diberi label nama repo (`tgr-website`, `viralytics-v2`, …) supaya bisa difilter per repo dalam satu project Jira.
-- `.jira-map.json` di-commit ke repo (tanpa secret): `{ "site": "…", "projectKey": "…", "label": "…" }`.
+- **Epic = repo.** Tiap repo punya satu Epic di Jira; item baru otomatis ber-parent ke sana (`epicKey`).
+- `.jira-map.json` di-commit ke repo (tanpa secret): `{ "site": "…", "projectKey": "…", "label": "…", "epicKey": "…" }`.
 - Config global per device di `~/.jstack/config.json` (tanpa secret).
 
 ## Keamanan & privasi

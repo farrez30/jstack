@@ -21,6 +21,10 @@ Sebut key + aksinya secara eksplisit, contoh:
 
 Aturan yang sama dengan /jstack tetap berlaku secara etika: minta Claude menampilkan draft dulu sebelum menulis, dan sebutkan label repo (`tgr-website`, `viralytics-v2`, …) supaya konsisten dengan konvensi jstack.
 
+## Project baru yang lahir di Chat/Cowork
+
+Kalau kamu memulai project baru dari Chat, minta Claude menanyakan konteksnya sekalian — contoh: *"Saya mulai project X — buatkan Epic-nya di COD: tanya saya target selesai & tujuannya, lalu tampilkan draft sebelum dibuat."* Konvensinya sama dengan di Claude Code: satu project/repo = satu Epic (+ label), start = kenyataan, due = target.
+
 ## Sinkron dengan sesi Claude Code
 
 Tidak perlu sinkronisasi apa pun — acli dan connector menulis ke Jira yang sama. Update dari Chat langsung terlihat saat `/jstack status` dijalankan di device mana pun, dan sebaliknya.
