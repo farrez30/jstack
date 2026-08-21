@@ -66,16 +66,18 @@ acli jira workitem search --jql "project = COD AND statusCategory != Done" --cou
 
 Flag: `--jql` `--fields` (default `issuetype,key,assignee,priority,status,summary`) `--limit` `--paginate` `--json` `--csv` `--count`.
 
-Dua jebakan teruji di lapangan:
-- `--fields` punya whitelist — `duedate` DITOLAK (`field 'duedate' is not allowed`). Butuh due date → pakai `--json` (memuat semua field, termasuk `fields.duedate`) dan format sendiri.
+Jebakan teruji di lapangan:
+- `--fields` search punya whitelist — `duedate` DITOLAK (`field 'duedate' is not allowed`), bahkan dengan `--json`. **`search` tidak bisa mengembalikan duedate/labels sama sekali** (di output JSON-nya field itu `null` walau nilainya ada di Jira). Resep dashboard yang benar: `search --json` untuk daftar + urutan (JQL `ORDER BY duedate ASC` tetap bekerja — sorting terjadi di server), lalu ambil nilai per item yang mau ditampilkan via `view KEY --fields duedate,labels --json`.
 - Pipe output `--json` ke parser (python/jq) jangan lewat PowerShell 5.1 — pipeline-nya menambah BOM UTF-8 yang membuat `json.load` gagal. Jalankan lewat Git Bash, atau di python pakai `utf-8-sig`.
 
 ## View — read, bebas jalan
 
 ```bash
 acli jira workitem view COD-7 --json
-acli jira workitem view COD-7 --fields summary,comment
+acli jira workitem view COD-7 --fields "labels,duedate,status" --json
 ```
+
+**JEBAKAN PALING BERBAHAYA (teruji — sempat membuat kami salah menyimpulkan "data terhapus"):** `view`/`search` hanya mengambil field yang diminta. Tanpa `--fields`, field non-default (labels, duedate, dll.) muncul sebagai **`null` di JSON — padahal nilainya ada di Jira**. `null` di sini artinya "tidak diminta", bukan "kosong". Aturan keras: **memverifikasi nilai sebuah field = WAJIB menyebutnya di `--fields` + `--json`** (output tabel tanpa `--json` malah bisa tidak menampilkan kolomnya sama sekali).
 
 ## Create — KONFIRMASI DULU
 

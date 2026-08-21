@@ -90,7 +90,7 @@ Jalankan dari dalam repo target.
 2. Jalankan search (cookbook §Search):
    - Milik saya, belum selesai, semua project: `assignee = currentUser() AND statusCategory != Done ORDER BY duedate ASC, updated DESC`
    - Varian repo ini: tambah `project = <KEY>` (+ filter `labels = "<label-repo>"` bila ada).
-3. Render tabel markdown ringkas: Key | Summary (potong ±60 char) | Status | Due | Assignee. Tandai yang due-nya lewat/≤3 hari. Due date hanya ada di output `--json` (whitelist `--fields` menolak `duedate` — lihat jebakan di cookbook §Search); parse JSON-nya lewat Git Bash, bukan pipe PowerShell.
+3. Render tabel markdown ringkas: Key | Summary (potong ±60 char) | Status | Due | Assignee. Tandai yang due-nya lewat/≤3 hari. Duedate/labels TIDAK bisa diambil dari `search` sama sekali — ambil per item via `view KEY --fields duedate,labels --json` (lihat jebakan di cookbook §Search/§View); parse JSON lewat Git Bash, bukan pipe PowerShell.
 4. Sebutkan juga item Unassigned di project repo ini (kandidat untuk diambil).
 
 ## /jstack sync — rekonsiliasi batch
