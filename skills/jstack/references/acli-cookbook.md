@@ -86,7 +86,7 @@ acli jira workitem create --project "COD" --type "Task" --summary "Judul task" \
   --description "Deskripsi plain text" --assignee "@me" --label "tgr-website" --json
 ```
 
-Flag: `-p/--project` `-t/--type` (case sensitive) `-s/--summary` `-d/--description` `-a/--assignee` (email, account ID, `@me`, atau `default`) `-l/--label` (koma untuk banyak) `--parent`. Field tanpa flag (due date, priority, custom field) → pakai `--from-json` (lihat field-map.md) atau `--generate-json` untuk contoh bentuknya.
+Flag: `-p/--project` `-t/--type` (case sensitive) `-s/--summary` `-d/--description` `-a/--assignee` (email, account ID, `@me`, atau `default`) `-l/--label` (koma untuk banyak) `--parent`. Field tanpa flag (due date, priority, custom field) → pakai `--from-json` (lihat field-map.md) atau `--generate-json` untuk contoh bentuknya. Di jalur `--from-json`, parent Epic ditulis sebagai `"parentIssueId"` dan assignee sebagai email atau account ID; `@me` hanya berlaku sebagai flag dan ditolak di JSON (teruji COD-42).
 
 **Teks bebas dari user/percakapan/git → jangan inline.** Contoh flag di atas hanya untuk teks singkat yang kamu susun sendiri tanpa karakter rawan. Summary/description yang bersumber dari kata-kata user: tulis dulu ke file JSON di direktori temp lalu `--from-json`, atau `--description-file` — quoting shell terhadap teks arbitrer itu rapuh.
 

@@ -71,7 +71,7 @@ Jalankan dari dalam repo target.
 
 1. Baca `.jira-map.json` (tidak ada → tawarkan `init` dulu; atau user boleh menyebut project key eksplisit).
 2. Kumpulkan field: summary (wajib), description, type (Task/Bug/Story — cek type yang tersedia di project), assignee, **due date (selalu tanyakan** — boleh dijawab "tidak ada", tapi tanpa ditanya Timeline & radar overdue mati), priority, link terkait. Jangan interogasi satu-satu kalau user sudah memberi sebagian di prompt — tanya hanya yang kosong dan penting (minimal: summary + type + due date).
-3. Tampilkan draft item → konfirmasi → jalankan `create` sesuai cookbook (sertakan label repo + `--parent <epicKey>` dari `.jira-map.json`; due date via `--from-json` additionalAttributes). `epicKey` kosong/tidak ada → JANGAN buat item tanpa parent diam-diam: tawarkan dulu melengkapinya (pilih Epic yang ada / buat baru, seperti langkah init №3) — user boleh menolak, barulah buat tanpa parent.
+3. Tampilkan draft item → konfirmasi → jalankan `create` sesuai cookbook (sertakan label repo + parent `epicKey` dari `.jira-map.json`; due date via `--from-json` additionalAttributes). Di `--from-json`, parent ditulis `"parentIssueId": "<epicKey>"` dan assignee berupa email (bukan `@me`) — bentuk lengkap di field-map. `epicKey` kosong/tidak ada → JANGAN buat item tanpa parent diam-diam: tawarkan dulu melengkapinya (pilih Epic yang ada / buat baru, seperti langkah init №3) — user boleh menolak, barulah buat tanpa parent.
 4. Laporkan key hasil (mis. `COD-7`) + URL `https://<site>/browse/<KEY>`.
 
 ## /jstack log [KEY] — catat progres kerja
